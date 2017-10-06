@@ -29,6 +29,8 @@ vsc=
 output=
 verbose=false
 
+DEFAULT_BUILD=autotools
+DEFAULT_PLUGINS='@vcdkdir@'
 NAME_REGEX='^[[:alnum:]_-]*$'
 
 OPTIONS_USAGE="\
@@ -46,8 +48,8 @@ Options:
 OPTIONS_SPEC="\
 --help			display this message and exit
 --name=<name>		the project name (pattern: $NAME_REGEX)
---build=<plugin>	the build plugin (default: autotools)
---plugins=<dir>		default: @vcdkdir@
+--build=<plugin>	the build plugin (default: $DEFAULT_BUILD)
+--plugins=<dir>		default: $DEFAULT_PLUGINS
 --vmod=<vmod>		a comma-separated list of vmods to build
 --vut=<vut>		a comma-separated list of utilities to build
 --vsc=<vsc>		a comma-separated list of counters to build
@@ -177,10 +179,12 @@ then
 fi
 
 output=${output:-$name}
+rmdir "$output" 2>/dev/null || :
 mkdir "$output"
 cd "$output"
 
-build=${build:-autotools}
+build=${build:-$DEFAULT_BUILD}
+plugins=${plugins:-$DEFAULT_PLUGINS}
 
 export VCDK_NAME=$name
 export VCDK_NAME=$name
@@ -189,4 +193,4 @@ export VCDK_VUT=$vut
 export VCDK_VSC=$vsc
 export VCDK_VERBOSE=$verbose
 
-env | grep VCDK
+exec "$plugins/$build"
