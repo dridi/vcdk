@@ -21,6 +21,7 @@ set -u
 
 DEFAULT_BUILD=autotools
 DEFAULT_PLUGINS='@vcdkdir@'
+DEFAULT_SETUP='@libexecdir@'
 NAME_REGEX='^[[:alnum:]_-]*$'
 
 OPTIONS_USAGE="\
@@ -57,100 +58,10 @@ vmod=
 vsc=
 vut=
 
-options_iter() {
-	func=$1
-	shift
+. "${VCDK_SETUP:-$DEFAULT_SETUP}/vcdk-setup.sh"
 
-	status=0
-
-	OLD_IFS=$IFS
-	IFS='|'
-	spec=$(printf '%s' "$OPTIONS_SPEC" | tr '\n' '|')
-
-	for line in $spec
-	do
-		opt=${line%%	*}
-		dsc=${line##*	}
-		"$func" "$opt" "$dsc" "$@" || status=$?
-		test "$status" -eq 0 || break
-	done
-	IFS=$OLD_IFS
-
-	return $status
-}
-
-options_parse() {
-	opt_name=
-	opt_arg=
-	opt_shift=
-	test $# -ge 1 || return 1
-
-	opt_name=$1
-	opt_shift=1
-
-	opt_parse() {
-		test "${1%=*}" = "${3%%=*}" || return 0
-
-		if [ "${1%=*}" = "$1" ]
-		then
-			test "$1" = "$3" || usage_error "illegal option: $3"
-			return 1
-		fi
-
-		if [ "$3" = "${3%%=*}" ]
-		then
-			opt_shift=2
-		else
-			opt_arg=${3#*=}
-			test -n "$opt_arg" || usage_error "empty argument: $3"
-		fi
-
-		return 1
-	}
-
-	if options_iter opt_parse "$opt_name"
-	then
-		# didn't break out of the loop, no match
-		usage_error "illegal option: $opt_name"
-	fi
-
-	if [ $opt_shift -eq 2 ]
-	then
-		test $# -ge 2 || usage_error "missing argument: $opt_name"
-		opt_arg=$2
-		test -n "$opt_arg" || usage_error "empty argument: $opt_name"
-	fi
-
-	opt_name=${opt_name#--}
-	opt_name=${opt_name%%=*}
-}
-
-usage() {
-	print_option_usage() {
-		printf '    %-20s %s\n' "$1" "$2"
-	}
-
-	printf '%s' "$OPTIONS_USAGE"
-	options_iter print_option_usage
-}
-
-usage_error() {
-	printf 'vcdk: %s\n\n' "$*" >&2
-	usage >&2
-	exit 1
-}
-
-while options_parse "$@"
-do
-	opt_value=$(eval echo "\$$opt_name")
-	test -n "$opt_value" && (
-		test -n "$opt_arg" ||
-		test "$opt_value" != false
-	) && usage_error "option already set: --$opt_name"
-
-	eval "$opt_name='${opt_arg:-true}'"
-	shift $opt_shift
-done
+options_init "$@"
+shift $opt_ind
 
 if $help
 then

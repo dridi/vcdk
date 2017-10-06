@@ -17,7 +17,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 bin_SCRIPTS = vcdk
+libexec_SCRIPTS = vcdk-setup.sh
 
 vcdk: vcdk.in
-	$(SED) -e 's:[@]vcdkdir[@]:$(vcdkdir):' <'$(srcdir)/vcdk.in' >vcdk
+	$(SED) \
+		-e 's:[@]vcdkdir[@]:$(vcdkdir):' \
+		-e 's:[@]libexecdir[@]:$(libexecdir):' \
+		<'$(srcdir)/vcdk.in' >vcdk
 	chmod +x vcdk
