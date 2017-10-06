@@ -1,0 +1,11 @@
+autom4te.cache/
+build-aux/
+
+Makefile
+Makefile.in
+aclocal.m4
+config.log
+config.status
+configure
+
+vcdk

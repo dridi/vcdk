@@ -21,6 +21,7 @@ set -u
 
 help=false
 build=
+plugins=
 vmod=
 vut=
 vsc=
@@ -41,6 +42,7 @@ Options:
 OPTIONS_SPEC="\
 --help			display this message and exit
 --build=<plugin>	the build plugin (default: autotools)
+--plugins=<dir>		default: @vcdkdir@
 --vmod=<vmod>		a comma-separated list of vmods to build
 --vut=<vut>		a comma-separated list of utilities to build
 --vsc=<vsc>		a comma-separated list of counters to build
@@ -161,6 +163,7 @@ fi
 build=${build:-autotools}
 
 echo build=$build
+echo plugins=$plugins
 echo vmod=$vmod
 echo vut=$vut
 echo vsc=$vsc
