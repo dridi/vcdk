@@ -24,6 +24,9 @@ options_iter() {
 
 	status=0
 
+	"$func" "--help" "display this message and exit" "$@" ||
+	return 1
+
 	OLD_IFS=$IFS
 	IFS='|'
 	spec=$(printf '%s' "$OPTIONS_SPEC" | tr '\n' '|')
@@ -87,6 +90,7 @@ options_parse() {
 }
 
 options_init() {
+	help=false
 	opt_ind=0
 	while options_parse "$@"
 	do
@@ -100,6 +104,12 @@ options_init() {
 		shift $opt_shift
 		opt_ind=$((opt_ind + opt_shift))
 	done
+
+	if $help
+	then
+		usage
+		exit
+	fi
 }
 
 usage() {

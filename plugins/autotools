@@ -35,7 +35,6 @@ Options:
 "
 
 OPTIONS_SPEC="\
---help			display this message and exit
 --output=<dir>		default: the project name
 --verbose		display additional information
 --vmod=<list>		names of vmods to build
@@ -43,7 +42,6 @@ OPTIONS_SPEC="\
 --vut=<list>		names of utilities to build
 "
 
-help=false
 output=
 verbose=false
 vmod=
@@ -52,12 +50,6 @@ vut=
 
 options_init "$@"
 shift $opt_ind
-
-if $help
-then
-	usage
-	exit
-fi
 
 test $# -gt 0 ||
 usage_error 'missing project name'

@@ -40,21 +40,13 @@ Options:
 "
 
 OPTIONS_SPEC="\
---help			display this message and exit
 --plugins=<dir>		default: $DEFAULT_PLUGINS
 "
 
-help=false
 plugins=
 
 options_init "$@"
 shift $opt_ind
-
-if $help
-then
-	usage
-	exit
-fi
 
 if [ $# -eq 0 ]
 then
