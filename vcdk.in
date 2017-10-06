@@ -20,6 +20,7 @@ set -e
 set -u
 
 help=false
+name=
 build=
 plugins=
 vmod=
@@ -28,7 +29,7 @@ vsc=
 verbose=false
 
 OPTIONS_USAGE="\
-Usage: $0 [--build <plugin>] [--vmod <vmod> [--vsc <vsc>]] [--vut <vut>]
+Usage: $0 [--name <name>] [--vmod <vmod> [--vsc <vsc>]] [--vut <vut>]
        $0 --help
 
 At least one VMOD or one VUT must be specified, a VSC can only be used
@@ -41,6 +42,7 @@ Options:
 
 OPTIONS_SPEC="\
 --help			display this message and exit
+--name=<name>		the project name
 --build=<plugin>	the build plugin (default: autotools)
 --plugins=<dir>		default: @vcdkdir@
 --vmod=<vmod>		a comma-separated list of vmods to build
@@ -150,6 +152,11 @@ then
 	exit
 fi
 
+if [ -z "$name" ]
+then
+	usage_error 'missing project name'
+fi
+
 if [ -z "$vmod" ] && [ -z "$vut" ]
 then
 	usage_error 'no VMOD and no VUT to build'
@@ -162,6 +169,7 @@ fi
 
 build=${build:-autotools}
 
+echo name=$name
 echo build=$build
 echo plugins=$plugins
 echo vmod=$vmod
