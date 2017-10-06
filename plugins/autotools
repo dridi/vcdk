@@ -37,15 +37,14 @@ Options:
 OPTIONS_SPEC="\
 --help			display this message and exit
 --output=<dir>		default: the project name
---verbose		display status information of the execution
---vmod=<vmod>		a comma-separated list of vmods to build
---vsc=<vsc>		a comma-separated list of counters to build
---vut=<vut>		a comma-separated list of utilities to build
+--verbose		display additional information
+--vmod=<list>		names of vmods to build
+--vsc=<list>		names of counters to build
+--vut=<list>		names of utilities to build
 "
 
 help=false
 output=
-plugins=
 verbose=false
 vmod=
 vsc=
@@ -94,7 +93,8 @@ mkdir "$output"
 cd "$output"
 
 echo name=$name
+echo output=$output
 echo vmod=$vmod
-echo vut=$vut
 echo vsc=$vsc
+echo vut=$vut
 echo verbose=$verbose
