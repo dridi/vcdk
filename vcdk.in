@@ -26,7 +26,10 @@ plugins=
 vmod=
 vut=
 vsc=
+output=
 verbose=false
+
+NAME_REGEX='^[[:alnum:]_-]*$'
 
 OPTIONS_USAGE="\
 Usage: $0 [--name <name>] [--vmod <vmod> [--vsc <vsc>]] [--vut <vut>]
@@ -42,12 +45,13 @@ Options:
 
 OPTIONS_SPEC="\
 --help			display this message and exit
---name=<name>		the project name
+--name=<name>		the project name (pattern: $NAME_REGEX)
 --build=<plugin>	the build plugin (default: autotools)
 --plugins=<dir>		default: @vcdkdir@
 --vmod=<vmod>		a comma-separated list of vmods to build
 --vut=<vut>		a comma-separated list of utilities to build
 --vsc=<vsc>		a comma-separated list of counters to build
+--output=<dir>		default: the project name
 --verbose		display status information of the execution
 "
 
@@ -157,6 +161,11 @@ then
 	usage_error 'missing project name'
 fi
 
+if ! echo "$name" | grep -Eq "$NAME_REGEX"
+then
+	usage_error "invalid project name: $name"
+fi
+
 if [ -z "$vmod" ] && [ -z "$vut" ]
 then
 	usage_error 'no VMOD and no VUT to build'
@@ -167,6 +176,10 @@ then
 	usage_error 'a VSC can only be used by a VMOD'
 fi
 
+output=${output:-$name}
+mkdir "$output"
+cd "$output"
+
 build=${build:-autotools}
 
 echo name=$name
@@ -175,4 +188,5 @@ echo plugins=$plugins
 echo vmod=$vmod
 echo vut=$vut
 echo vsc=$vsc
+echo output=$output
 echo verbose=$verbose
