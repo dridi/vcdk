@@ -1,0 +1,100 @@
+#!/bin/sh
+#
+# Copyright (C) 2017  Dridi Boukelmoune
+# All rights reserved.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set -e
+set -u
+
+. "${VCDK_SETUP}/vcdk-setup.sh"
+
+OPTIONS_USAGE="\
+Usage: vcdk autotools [--vmod <vmod> [--vsc <vsc>]] [--vut <vut>] <name>
+       vcdk autotools --help
+
+At least one VMOD or one VUT must be specified, a VSC can only be used
+in a VMOD. The name of the project must match this extended regular
+expression:
+
+    $VCDK_NAME_REGEX
+
+Options:
+"
+
+OPTIONS_SPEC="\
+--help			display this message and exit
+--output=<dir>		default: the project name
+--verbose		display status information of the execution
+--vmod=<vmod>		a comma-separated list of vmods to build
+--vsc=<vsc>		a comma-separated list of counters to build
+--vut=<vut>		a comma-separated list of utilities to build
+"
+
+help=false
+output=
+plugins=
+verbose=false
+vmod=
+vsc=
+vut=
+
+options_init "$@"
+shift $opt_ind
+
+if $help
+then
+	usage
+	exit
+fi
+
+test $# -gt 0 ||
+usage_error 'missing project name'
+
+test $# -eq 1 ||
+usage_error 'too many arguments'
+
+name=$1
+
+if [ -z "$name" ]
+then
+	usage_error 'missing project name'
+fi
+
+if ! echo "$name" | grep -Eq "$VCDK_NAME_REGEX"
+then
+	usage_error "invalid project name: $name"
+fi
+
+if [ -z "$vmod" ] && [ -z "$vut" ]
+then
+	usage_error 'no VMOD and no VUT to build'
+fi
+
+if [ -z "$vmod" ] && [ -n "$vsc" ]
+then
+	usage_error 'a VSC can only be used by a VMOD'
+fi
+
+output=${output:-$name}
+rmdir "$output" 2>/dev/null || :
+mkdir "$output"
+cd "$output"
+
+echo name=$name
+echo vmod=$vmod
+echo vut=$vut
+echo vsc=$vsc
+echo verbose=$verbose

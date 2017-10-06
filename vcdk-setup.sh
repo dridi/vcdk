@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+VCDK_NAME_REGEX='^[[:alnum:]_-]*$'
+
 options_iter() {
 	func=$1
 	shift
@@ -70,7 +72,7 @@ options_parse() {
 	if options_iter opt_parse "$opt_name"
 	then
 		# didn't break out of the loop, no match
-		usage_error "illegal option: $opt_name"
+		return 1
 	fi
 
 	if [ $opt_shift -eq 2 ]
