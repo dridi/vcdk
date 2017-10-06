@@ -182,11 +182,11 @@ cd "$output"
 
 build=${build:-autotools}
 
-echo name=$name
-echo build=$build
-echo plugins=$plugins
-echo vmod=$vmod
-echo vut=$vut
-echo vsc=$vsc
-echo output=$output
-echo verbose=$verbose
+export VCDK_NAME=$name
+export VCDK_NAME=$name
+export VCDK_VMOD=$vmod
+export VCDK_VUT=$vut
+export VCDK_VSC=$vsc
+export VCDK_VERBOSE=$verbose
+
+env | grep VCDK
