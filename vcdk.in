@@ -47,14 +47,14 @@ Options:
 
 OPTIONS_SPEC="\
 --help			display this message and exit
---name=<name>		the project name (pattern: $NAME_REGEX)
 --build=<plugin>	the build plugin (default: $DEFAULT_BUILD)
---plugins=<dir>		default: $DEFAULT_PLUGINS
---vmod=<vmod>		a comma-separated list of vmods to build
---vut=<vut>		a comma-separated list of utilities to build
---vsc=<vsc>		a comma-separated list of counters to build
+--name=<name>		the project name (pattern: $NAME_REGEX)
 --output=<dir>		default: the project name
+--plugins=<dir>		default: $DEFAULT_PLUGINS
 --verbose		display status information of the execution
+--vmod=<vmod>		a comma-separated list of vmods to build
+--vsc=<vsc>		a comma-separated list of counters to build
+--vut=<vut>		a comma-separated list of utilities to build
 "
 
 options_iter() {
