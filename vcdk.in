@@ -19,16 +19,6 @@
 set -e
 set -u
 
-help=false
-name=
-build=
-plugins=
-vmod=
-vut=
-vsc=
-output=
-verbose=false
-
 DEFAULT_BUILD=autotools
 DEFAULT_PLUGINS='@vcdkdir@'
 NAME_REGEX='^[[:alnum:]_-]*$'
@@ -56,6 +46,16 @@ OPTIONS_SPEC="\
 --vsc=<vsc>		a comma-separated list of counters to build
 --vut=<vut>		a comma-separated list of utilities to build
 "
+
+help=false
+build=
+name=
+output=
+plugins=
+verbose=false
+vmod=
+vsc=
+vut=
 
 options_iter() {
 	func=$1
