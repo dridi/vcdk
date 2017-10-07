@@ -20,7 +20,7 @@ set -e
 set -u
 
 VCDK_PLUGIN_DIR=$(cd "$(dirname "$0")"; pwd)
-VCDK_NAME_REGEX='^[[:alnum:]_-]*$'
+VCDK_NAME_REGEX='^[[:alnum:]][[:alnum:]_-]*$'
 
 options_iter() {
 	func=$1
@@ -61,7 +61,7 @@ options_parse() {
 
 		if [ "${1%=*}" = "$1" ]
 		then
-			test "$1" = "$3" || usage_error "illegal option: $3"
+			test "$1" = "$3" || usage_error "unknown option: $3"
 			return 1
 		fi
 
@@ -79,6 +79,10 @@ options_parse() {
 	if options_iter opt_parse "$opt_name"
 	then
 		# didn't break out of the loop, no match
+		test "${opt_name#-}" = "$opt_name" ||
+		usage_error "unknown option: $opt_name"
+
+		# not an option, end of parsing
 		return 1
 	fi
 
