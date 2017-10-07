@@ -93,13 +93,7 @@ rmdir "$output" 2>/dev/null || :
 mkdir "$output"
 cd "$output"
 
-echo name=$name
-echo output=$output
-echo pkg=$pkg
-echo scm=$scm
-echo vmod=$vmod
-echo vsc=$vsc
-echo vut=$vut
-echo verbose=$verbose
+bootstrap >bootstrap
+chmod +x bootstrap
 
 configure_ac >configure.ac

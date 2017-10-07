@@ -14,6 +14,58 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+###########
+# bootstrap
+###########
+
+bootstrap() {
+cat << 'EOF'
+#!/bin/sh
+
+set -e
+
+WORK_DIR="$PWD"
+ROOT_DIR="$(dirname "$0")"
+
+test -n "$ROOT_DIR"
+cd "$ROOT_DIR"
+
+EOF
+
+test -n "$vmod" &&
+cat <<EOF
+if ! which libtoolize >/dev/null 2>&1
+then
+	echo "libtoolize: command not found, falling back to glibtoolize" >&2
+	alias libtoolize=glibtoolize
+fi
+
+EOF
+
+cat <<EOF
+mkdir -p m4
+aclocal
+EOF
+
+test -n "$vmod" &&
+cat <<EOF
+libtoolize --copy --force
+EOF
+
+cat << 'EOF'
+autoheader
+automake --add-missing --copy --foreign
+autoconf
+
+cd "$WORK_DIR"
+"$ROOT_DIR"/configure "$@"
+EOF
+}
+
+##############
+# configure.ac
+##############
+
 ac_config_files() {
 cat <<EOF
 
