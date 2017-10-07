@@ -14,6 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+needs_libtool() {
+	test -n "$vmod"
+}
+
 ###########
 # bootstrap
 ###########
@@ -32,7 +36,7 @@ cd "$ROOT_DIR"
 
 EOF
 
-test -n "$vmod" &&
+needs_libtool &&
 cat <<EOF
 if ! which libtoolize >/dev/null 2>&1
 then
@@ -47,7 +51,7 @@ mkdir -p m4
 aclocal
 EOF
 
-test -n "$vmod" &&
+needs_libtool &&
 cat <<EOF
 libtoolize --copy --force
 EOF
@@ -106,7 +110,7 @@ AM_PROG_AR
 
 EOF
 
-test -n "$vmod" &&
+needs_libtool &&
 cat <<EOF
 LT_PREREQ([2.2.6])
 LT_INIT([dlopen disable-static])
