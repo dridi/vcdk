@@ -36,6 +36,7 @@ Options:
 
 OPTIONS_SPEC="\
 --output=<dir>		default: the project name
+--scm=<scm>		only 'git' (default) is supported
 --verbose		display additional information
 --vmod=<list>		names of vmods to build
 --vsc=<list>		names of counters to build
@@ -43,6 +44,7 @@ OPTIONS_SPEC="\
 "
 
 output=
+scm=
 verbose=false
 vmod=
 vsc=
@@ -79,6 +81,13 @@ then
 	usage_error 'a VSC can only be used by a VMOD'
 fi
 
+scm=${scm:-git}
+
+case $scm in
+	git) ;;
+	*) usage_error "unknown scm: $scm" ;;
+esac
+
 output=${output:-$name}
 rmdir "$output" 2>/dev/null || :
 mkdir "$output"
@@ -86,6 +95,7 @@ cd "$output"
 
 echo name=$name
 echo output=$output
+echo scm=$scm
 echo vmod=$vmod
 echo vsc=$vsc
 echo vut=$vut
