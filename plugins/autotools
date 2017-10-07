@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${VCDK_SETUP}/vcdk-setup.sh"
+. "${VCDK_PLUGIN_DIR}/autotools--codegen.sh"
 
 OPTIONS_USAGE="\
 Usage: vcdk autotools [--vmod <vmod> [--vsc <vsc>]] [--vut <vut>] <name>
@@ -100,3 +101,5 @@ echo vmod=$vmod
 echo vsc=$vsc
 echo vut=$vut
 echo verbose=$verbose
+
+configure_ac >configure.ac
