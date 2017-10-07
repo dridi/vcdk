@@ -30,6 +30,7 @@ DEFAULT_SETUP='@libexecdir@'
 OPTIONS_USAGE="\
 Usage: $0 [options] <plugin> [plugin options]
        $0 --help
+       $0 --list
 
 Options can only appear once in the command line, and options that take
 an argument support both \`--opt value\` and \`--opt=value\` notations.
@@ -40,20 +41,34 @@ Options:
 "
 
 OPTIONS_SPEC="\
+--list			list available plugins and exit
 --plugins=<dir>		default: $DEFAULT_PLUGINS
 "
 
+list=false
 plugins=
 
 options_init "$@"
 shift $opt_ind
+
+plugins=${plugins:-$DEFAULT_PLUGINS}
+
+if $list
+then
+	for file in "$plugins"/*
+	do
+		test -f "$file" &&
+		test -x "$file" &&
+		basename "$file"
+	done
+	exit
+fi
 
 if [ $# -eq 0 ]
 then
 	usage_error 'missing plugin argument'
 fi
 
-plugins=${plugins:-$DEFAULT_PLUGINS}
 plugin=$1
 shift
 
