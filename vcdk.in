@@ -16,16 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set -e
-set -u
+DEFAULT_PLUGINS='@vcdkdir@'
+DEFAULT_SETUP='@libexecdir@'
 
 # To be inherited by plugins
 export VCDK_SETUP=${VCDK_SETUP:-$DEFAULT_SETUP}
 
 . "${VCDK_SETUP}/vcdk-setup.sh"
-
-DEFAULT_PLUGINS='@vcdkdir@'
-DEFAULT_SETUP='@libexecdir@'
 
 OPTIONS_USAGE="\
 Usage: $0 [options] <plugin> [plugin options]
