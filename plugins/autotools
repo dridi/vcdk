@@ -36,6 +36,7 @@ Options:
 
 OPTIONS_SPEC="\
 --output=<dir>		default: the project name
+--pkg=<list>		only 'rpm' is supported
 --scm=<scm>		only 'git' (default) is supported
 --verbose		display additional information
 --vmod=<list>		names of vmods to build
@@ -44,6 +45,7 @@ OPTIONS_SPEC="\
 "
 
 output=
+pkg=
 scm=
 verbose=false
 vmod=
@@ -95,6 +97,7 @@ cd "$output"
 
 echo name=$name
 echo output=$output
+echo pkg=$pkg
 echo scm=$scm
 echo vmod=$vmod
 echo vsc=$vsc
