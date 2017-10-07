@@ -134,3 +134,7 @@ usage_error() {
 	usage >&2
 	exit 1
 }
+
+to_upper() {
+	printf '%s' "$1" | tr '[:lower:]' '[:upper:]'
+}

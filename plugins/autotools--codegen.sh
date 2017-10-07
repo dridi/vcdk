@@ -177,3 +177,139 @@ DISTCHECK_CONFIGURE_FLAGS = RST2MAN=:
 SUBDIRS = src
 EOF
 }
+
+#################
+# src/Makefile.am
+#################
+
+vmod_ltlibraries() {
+cat <<EOF
+
+# Modules
+
+vmod_LTLIBRARIES = \\
+EOF
+
+OLD_IFS=$IFS
+IFS=,
+
+for v in $vmod
+do
+	printf '\tlibvmod_%s.la \\\n' "$v"
+done
+
+for v in $vmod
+do
+cat <<EOF
+
+libvmod_${v}_la_LDFLAGS = \$(VMOD_LDFLAGS)
+libvmod_${v}_la_SOURCES = vmod_${v}.c
+nodist_libvmod_${v}_la_SOURCES = \\
+	vcc_${v}_if.c \\
+	vcc_${v}_if.h
+EOF
+done
+
+echo
+
+for v in $vmod
+do
+cat <<EOF
+@BUILD_VMOD_$(to_upper "$v")@
+EOF
+done
+
+IFS=$OLD_IFS
+
+# TODO: figure VSCs out
+}
+
+bin_programs() {
+cat <<EOF
+
+# Utilities
+
+bin_PROGRAMS = \\
+EOF
+
+OLD_IFS=$IFS
+IFS=,
+
+for v in $vut
+do
+	printf '\t%s \\\n' "$v"
+done
+
+for v in $vut
+do
+cat <<EOF
+
+${v}_LDFLAGS = \$(VARNISHAPI_LIBS)
+${v}_SOURCES = \\
+	${v}.c \\
+	${v}_options.h
+EOF
+done
+
+IFS=$OLD_IFS
+}
+
+src_makefile_am() {
+cat << 'EOF'
+AM_CFLAGS = $(VARNISHAPI_CFLAGS)
+EOF
+
+test -n "$vmod" && vmod_ltlibraries
+test -n "$vut" && bin_programs
+
+cat << 'EOF'
+
+# Test suite
+
+AM_TESTS_ENVIRONMENT = \
+	PATH="$(abs_builddir):$(VARNISH_TEST_PATH):$(PATH)" \
+	LD_LIBRARY_PATH="$(VARNISH_LIBRARY_PATH)"
+TEST_EXTENSIONS = .vtc
+VTC_LOG_COMPILER = varnishtest -v
+AM_VTC_LOG_FLAGS = \
+	-p vcl_path="$(abs_top_srcdir)/vcl" \
+	-p vmod_path="$(abs_builddir)/.libs:$(vmoddir)"
+EOF
+
+
+# TODO: TESTS = tests/vmod_*.vtc tests/vut_*.vtc
+# TODO: dist_doc_DATA
+
+cat <<EOF
+
+# Documentation
+
+dist_man_MANS = \\
+EOF
+
+OLD_IFS=$IFS
+IFS=,
+
+for v in $vmod
+do
+	printf '\tvmod_%s.3 \\\n' "$v"
+done
+
+for v in $vut
+do
+	printf '\t%s.1 \\\n' "$v"
+done
+
+echo
+
+for v in $vut
+do
+	printf '@GENERATE_%s_DOCS@\n' "$(to_upper "$v")"
+done
+
+cat << 'EOF'
+
+.rst.1:
+	$(AM_V_GEN) $(RST2MAN) $< $@
+EOF
+}

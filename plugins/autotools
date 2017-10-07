@@ -98,3 +98,7 @@ chmod +x bootstrap
 
 configure_ac >configure.ac
 makefile_am >Makefile.am
+
+mkdir src
+
+src_makefile_am >src/Makefile.am
