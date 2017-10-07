@@ -163,3 +163,17 @@ AS_ECHO("
 ")
 EOF
 }
+
+#############
+# Makefile.am
+#############
+
+makefile_am() {
+cat << 'EOF'
+ACLOCAL_AMFLAGS = -I m4 -I $(VARNISHAPI_DATAROOTDIR)/aclocal
+
+DISTCHECK_CONFIGURE_FLAGS = RST2MAN=:
+
+SUBDIRS = src
+EOF
+}

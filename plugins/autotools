@@ -97,3 +97,4 @@ bootstrap >bootstrap
 chmod +x bootstrap
 
 configure_ac >configure.ac
+makefile_am >Makefile.am
