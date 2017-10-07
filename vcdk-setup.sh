@@ -19,6 +19,7 @@
 set -e
 set -u
 
+VCDK_PLUGIN_DIR=$(cd "$(dirname "$0")"; pwd)
 VCDK_NAME_REGEX='^[[:alnum:]_-]*$'
 
 options_iter() {
