@@ -52,8 +52,15 @@ AM_INIT_AUTOMAKE([1.12 -Wall -Werror foreign parallel-tests])
 AM_SILENT_RULES([yes])
 AM_PROG_AR
 
+EOF
+
+test -n "$vmod" &&
+cat <<EOF
 LT_PREREQ([2.2.6])
 LT_INIT([dlopen disable-static])
+EOF
+
+cat <<EOF
 
 AC_ARG_WITH([rst2man],
 	AS_HELP_STRING(
