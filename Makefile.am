@@ -18,6 +18,11 @@
 
 bin_SCRIPTS = vcdk
 libexec_SCRIPTS = vcdk-setup.sh
+vcdk_SCRIPTS = plugins/autotools
+
+vcdk_DATA = \
+	plugins/vcdk.m4 \
+	plugins/autotools--codegen.sh
 
 vcdk: vcdk.in
 	$(SED) \
@@ -25,3 +30,11 @@ vcdk: vcdk.in
 		-e 's:[@]libexecdir[@]:$(libexecdir):' \
 		<'$(srcdir)/vcdk.in' >vcdk
 	chmod +x vcdk
+
+CLEANFILES = vcdk
+
+EXTRA_DIST = \
+	$(libexec_SCRIPTS) \
+	$(vcdk_SCRIPTS) \
+	$(vcdk_DATA) \
+	vcdk.in
