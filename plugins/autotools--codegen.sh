@@ -182,134 +182,82 @@ EOF
 # src/Makefile.am
 #################
 
-vmod_ltlibraries() {
-cat <<EOF
+src_makefile_am() {
+# TODO: TESTS = tests/vmod_*.vtc tests/vut_*.vtc
+# TODO: figure out VSCs
+m4 <<EOF
+include($VCDK_PLUGIN_DIR/vcdk.m4)dnl
+AM_CFLAGS = \$(VARNISHAPI_CFLAGS)
+ifelse([$vmod], [], [], [dnl
 
 # Modules
 
 vmod_LTLIBRARIES = \\
-EOF
+foreachc([CONT], [ \\], [VMOD], ([$vmod]), [dnl
+	libvmod_[]VMOD.la[]CONT
+])dnl
+foreachc([], [], [VMOD], ([$vmod]), [dnl
 
-OLD_IFS=$IFS
-IFS=,
+libvmod_[]VMOD[]_la_LDFLAGS = \$(VMOD_LDFLAGS)
+libvmod_[]VMOD[]_la_SOURCES = vmod_[]VMOD.c
+nodist_libvmod_[]VMOD[]_la_SOURCES = \\
+	vcc_[]VMOD[]_if.c \\
+	vcc_[]VMOD[]_if.h
+])dnl
 
-for v in $vmod
-do
-	printf '\tlibvmod_%s.la \\\n' "$v"
-done
-
-for v in $vmod
-do
-cat <<EOF
-
-libvmod_${v}_la_LDFLAGS = \$(VMOD_LDFLAGS)
-libvmod_${v}_la_SOURCES = vmod_${v}.c
-nodist_libvmod_${v}_la_SOURCES = \\
-	vcc_${v}_if.c \\
-	vcc_${v}_if.h
-EOF
-done
-
-echo
-
-for v in $vmod
-do
-cat <<EOF
-@BUILD_VMOD_$(to_upper "$v")@
-EOF
-done
-
-IFS=$OLD_IFS
-
-# TODO: figure VSCs out
-}
-
-bin_programs() {
-cat <<EOF
+foreachc([], [], [VMOD], ([$vmod]), [dnl
+@BUILD_VMOD_[]to_upper(VMOD)@
+])dnl
+])dnl ifelse vmod
+ifelse([$vut], [], [], [dnl
 
 # Utilities
 
 bin_PROGRAMS = \\
-EOF
+foreachc([CONT], [ \\], [VUT], ([$vut]), [dnl
+	VUT[]CONT
+])dnl
+foreachc([], [], [VUT], ([$vut]), [dnl
 
-OLD_IFS=$IFS
-IFS=,
-
-for v in $vut
-do
-	printf '\t%s \\\n' "$v"
-done
-
-for v in $vut
-do
-cat <<EOF
-
-${v}_LDFLAGS = \$(VARNISHAPI_LIBS)
-${v}_SOURCES = \\
-	${v}.c \\
-	${v}_options.h
-EOF
-done
-
-IFS=$OLD_IFS
-}
-
-src_makefile_am() {
-cat << 'EOF'
-AM_CFLAGS = $(VARNISHAPI_CFLAGS)
-EOF
-
-test -n "$vmod" && vmod_ltlibraries
-test -n "$vut" && bin_programs
-
-cat << 'EOF'
+VUT[]_LDFLAGS = \$(VARNISHAPI_LIBS)
+VUT[]_SOURCES = \\
+	VUT.c \\
+	VUT[]_options.h
+])dnl
+])dnl ifelse vut
 
 # Test suite
 
-AM_TESTS_ENVIRONMENT = \
-	PATH="$(abs_builddir):$(VARNISH_TEST_PATH):$(PATH)" \
-	LD_LIBRARY_PATH="$(VARNISH_LIBRARY_PATH)"
+AM_TESTS_ENVIRONMENT = \\
+	PATH="\$(abs_builddir):\$(VARNISH_TEST_PATH):\$(PATH)" \\
+	LD_LIBRARY_PATH="\$(VARNISH_LIBRARY_PATH)"
 TEST_EXTENSIONS = .vtc
 VTC_LOG_COMPILER = varnishtest -v
-AM_VTC_LOG_FLAGS = \
-	-p vcl_path="$(abs_top_srcdir)/vcl" \
-	-p vmod_path="$(abs_builddir)/.libs:$(vmoddir)"
-EOF
-
-
-# TODO: TESTS = tests/vmod_*.vtc tests/vut_*.vtc
-# TODO: dist_doc_DATA
-
-cat <<EOF
+AM_VTC_LOG_FLAGS = \\
+	-p vcl_path="\$(abs_top_srcdir)/vcl" \\
+	-p vmod_path="\$(abs_builddir)/.libs:\$(vmoddir)"
 
 # Documentation
 
+dist_doc_DATA = \\
+foreachc([], [], [VMOD], ([$vmod]), [dnl
+	vmod_[]VMOD.vcc \\
+])dnl
+	\$(TESTS)
+
 dist_man_MANS = \\
-EOF
+foreachc([], [], [VMOD], ([$vmod]), [dnl
+	vmod_[]VMOD.3[] \\
+])dnl
+foreachc([], [], [VUT], ([$vut]), [dnl
+	VUT.1 \\
+])dnl
 
-OLD_IFS=$IFS
-IFS=,
-
-for v in $vmod
-do
-	printf '\tvmod_%s.3 \\\n' "$v"
-done
-
-for v in $vut
-do
-	printf '\t%s.1 \\\n' "$v"
-done
-
-echo
-
-for v in $vut
-do
-	printf '@GENERATE_%s_DOCS@\n' "$(to_upper "$v")"
-done
-
-cat << 'EOF'
+foreachc([], [], [VUT], ([$vut]), [dnl
+@GENERATE_[]to_upper(VUT)_DOCS@
+])dnl
 
 .rst.1:
-	$(AM_V_GEN) $(RST2MAN) $< $@
+	\$(AM_V_GEN) \$(RST2MAN) \$< \$@
 EOF
 }
