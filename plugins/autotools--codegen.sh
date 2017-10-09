@@ -141,9 +141,26 @@ EOF
 # src/Makefile.am
 #################
 
+manuals() {
+	OLD_IFS=$IFS
+	IFS=,
+	for v in $vmod
+	do
+		printf 'vmod_%s.3,' "$v"
+	done
+
+	for v in $vut
+	do
+		printf '%s.1,' "$v"
+	done
+	IFS=$OLD_IFS
+}
+
 src_makefile_am() {
 # TODO: TESTS = tests/vmod_*.vtc tests/vut_*.vtc
 # TODO: figure out VSCs
+all_mans=$(manuals)
+mans_list=${all_mans%,}
 m4 <<EOF
 include(vcdk.m4)dnl
 AM_CFLAGS = \$(VARNISHAPI_CFLAGS)
@@ -205,11 +222,8 @@ foreachc([], [], [VMOD], ([$vmod]), [dnl
 	\$(TESTS)
 
 dist_man_MANS = \\
-foreachc([], [], [VMOD], ([$vmod]), [dnl
-	vmod_[]VMOD.3[] \\
-])dnl
-foreachc([], [], [VUT], ([$vut]), [dnl
-	VUT.1 \\
+foreachc([CONT], [ \\], [MAN], ([$mans_list]), [dnl
+	MAN[]CONT
 ])dnl
 
 foreachc([], [], [VUT], ([$vut]), [dnl
