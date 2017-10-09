@@ -102,3 +102,12 @@ makefile_am >Makefile.am
 mkdir src
 
 src_makefile_am >src/Makefile.am
+
+OLD_IFS=$IFS
+IFS=,
+for v in $vmod
+do
+	src_vmod_c $v >src/vmod_$v.c
+	src_vmod_vcc $v >src/vmod_$v.vcc
+done
+IFS=$OLD_IFS
