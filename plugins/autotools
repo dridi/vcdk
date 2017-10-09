@@ -61,25 +61,20 @@ usage_error 'too many arguments'
 
 name=$1
 
-if [ -z "$name" ]
-then
-	usage_error 'missing project name'
-fi
+test -n "$name" ||
+usage_error 'missing project name'
 
-if ! echo "$name" | grep -Eq "$VCDK_NAME_REGEX"
-then
-	usage_error "invalid project name: $name"
-fi
+echo "$name" |
+grep -Eq "$VCDK_NAME_REGEX" ||
+usage_error "invalid project name: $name"
 
-if [ -z "$vmod" ] && [ -z "$vut" ]
-then
-	usage_error 'no VMOD and no VUT to build'
-fi
+test -n "$vmod" ||
+test -n "$vut" ||
+usage_error 'no VMOD and no VUT to build'
 
-if [ -z "$vmod" ] && [ -n "$vsc" ]
-then
-	usage_error 'a VSC can only be used by a VMOD'
-fi
+test -z "$vsc" ||
+test -n "$vmod" ||
+usage_error 'a VSC can only be used by a VMOD'
 
 scm=${scm:-git}
 
