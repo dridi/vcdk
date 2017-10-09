@@ -61,34 +61,11 @@ EOF
 # configure.ac
 ##############
 
-ac_config_files() {
-cat <<EOF
-
-AC_CONFIG_FILES([
-	Makefile
-	src/Makefile
-EOF
-
-OLD_IFS=$IFS
-IFS=,
-
-for v in $vut
-do
-	printf '\tsrc/%s.rst\n' "$v"
-done
-
-IFS=$OLD_IFS
-
-# TODO: packaging files
-
-cat <<EOF
-])
-
-EOF
-}
-
 configure_ac() {
-cat <<EOF
+# TODO: packaging files
+m4 -Dneeds_libtool=${vmod:+1} << EOF
+include(vcdk.m4)dnl
+changequote([{], [}])dnl
 AC_PREREQ([2.68])
 AC_INIT([$name], [0.1])
 AC_CONFIG_MACRO_DIR([m4])
@@ -99,16 +76,11 @@ AM_INIT_AUTOMAKE([1.12 -Wall -Werror foreign parallel-tests])
 AM_SILENT_RULES([yes])
 AM_PROG_AR
 
-EOF
-
-needs_libtool &&
-cat <<EOF
+ifelse(needs_libtool, {1}, {dnl
 LT_PREREQ([2.2.6])
 LT_INIT([dlopen disable-static])
-EOF
 
-cat <<EOF
-
+})dnl
 AC_ARG_WITH([rst2man],
 	AS_HELP_STRING(
 		[--with-rst2man=PATH],
@@ -117,26 +89,26 @@ AC_ARG_WITH([rst2man],
 	AC_CHECK_PROGS(RST2MAN, [rst2man rst2man.py], []))
 
 VARNISH_PREREQ([5.2.0])
-EOF
+ifelse({$vmod}, {}, {}, {dnl
+VARNISH_VMODS([translit({$vmod}, {,}, { })])
+})dnl
+ifelse({$vsc}, {}, {}, {dnl
+VARNISH_COUNTERS([translit({$vsc}, {,}, { })])
+})dnl
+ifelse({$vut}, {}, {}, {dnl
+VARNISH_UTILITIES([translit({$vut}, {,}, { })])
+})dnl
 
-test -n "$vmod" &&
-tr , ' ' <<EOF
-VARNISH_VMODS([$vmod])
-EOF
+AC_CONFIG_FILES([
+	Makefile
+	src/Makefile
+changequote({[}, {]})dnl
+foreachc([], [], [VUT], ([$vut]), [dnl
+	src/VUT.rst
+])dnl
+changequote([{], [}])dnl
+])
 
-test -n "$vsc" &&
-tr , ' ' <<EOF
-VARNISH_COUNTERS([$vsc])
-EOF
-
-test -n "$vut" &&
-tr , ' ' <<EOF
-VARNISH_UTILITIES([$vut])
-EOF
-
-ac_config_files
-
-cat <<EOF
 AC_OUTPUT
 
 AS_ECHO("
