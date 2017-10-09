@@ -110,4 +110,11 @@ do
 	src_vmod_c $v >src/vmod_$v.c
 	src_vmod_vcc $v >src/vmod_$v.vcc
 done
+
+for v in $vut
+do
+	src_vut_c $v >src/$v.c
+	src_vut_options_h $v >src/${v}_options.h
+	src_vut_rst_in $v >src/${v}.rst.in
+done
 IFS=$OLD_IFS
