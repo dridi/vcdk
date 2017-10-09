@@ -138,3 +138,7 @@ usage_error() {
 to_upper() {
 	printf '%s' "$1" | tr '[:lower:]' '[:upper:]'
 }
+
+m4() {
+	command m4 -I"$VCDK_PLUGIN_DIR" "$@"
+}

@@ -23,7 +23,8 @@ needs_libtool() {
 ###########
 
 bootstrap() {
-cat << 'EOF'
+m4 -Dneeds_libtool=${vmod:+1} << 'EOF'
+include(vcdk.m4)dnl
 #!/bin/sh
 
 set -e
@@ -34,29 +35,19 @@ ROOT_DIR="$(dirname "$0")"
 test -n "$ROOT_DIR"
 cd "$ROOT_DIR"
 
-EOF
-
-needs_libtool &&
-cat <<EOF
+ifelse(needs_libtool, [1], [dnl
 if ! which libtoolize >/dev/null 2>&1
 then
 	echo "libtoolize: command not found, falling back to glibtoolize" >&2
 	alias libtoolize=glibtoolize
 fi
 
-EOF
-
-cat <<EOF
+])dnl
 mkdir -p m4
 aclocal
-EOF
-
-needs_libtool &&
-cat <<EOF
+ifelse(needs_libtool, [1], [dnl
 libtoolize --copy --force
-EOF
-
-cat << 'EOF'
+])dnl
 autoheader
 automake --add-missing --copy --foreign
 autoconf
@@ -186,7 +177,7 @@ src_makefile_am() {
 # TODO: TESTS = tests/vmod_*.vtc tests/vut_*.vtc
 # TODO: figure out VSCs
 m4 <<EOF
-include($VCDK_PLUGIN_DIR/vcdk.m4)dnl
+include(vcdk.m4)dnl
 AM_CFLAGS = \$(VARNISHAPI_CFLAGS)
 ifelse([$vmod], [], [], [dnl
 
