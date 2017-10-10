@@ -25,9 +25,9 @@ export VCDK_SETUP=${VCDK_SETUP:-$DEFAULT_SETUP}
 . "${VCDK_SETUP}/vcdk-setup.sh"
 
 OPTIONS_USAGE="\
-Usage: $0 [options] <plugin> [plugin options]
-       $0 --help
-       $0 --list
+Usage: vcdk [options] <plugin> [plugin options]
+       vcdk --help
+       vcdk --list
 
 Options can only appear once in the command line, and options that take
 an argument support both \`--opt value\` and \`--opt=value\` notations.
