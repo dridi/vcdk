@@ -173,6 +173,46 @@ not supported... No problem, let's build this project and see what it has::
     # ERROR: 0
     ============================================================================
 
+Once installed, you may notice that it comes batteries included, even the man
+pages are present. The test cases are also installed, and the generated ones
+pass both within the build system, and on the local installation::
+
+    $ make install DESTDIR=$PWD/install
+    [...]
+    $ tree install
+    install
+    `-- usr
+        `-- local
+            |-- bin
+            |   |-- baz
+            |   `-- qux
+            |-- lib64
+            |   `-- varnish
+            |       `-- vmods
+            |           |-- libvmod_bar.la
+            |           |-- libvmod_bar.so
+            |           |-- libvmod_foo.la
+            |           `-- libvmod_foo.so
+            `-- share
+                |-- doc
+                |   `-- tutorial
+                |       |-- vmod_bar.vcc
+                |       |-- vmod_bar.vtc
+                |       |-- vmod_foo.vcc
+                |       |-- vmod_foo.vtc
+                |       |-- vut_baz.vtc
+                |       `-- vut_qux.vtc
+                `-- man
+                    |-- man1
+                    |   |-- baz.1
+                    |   `-- qux.1
+                    `-- man3
+                        |-- vmod_bar.3
+                        `-- vmod_foo.3
+
+One way to make sure your autotools project is correctly configured is to
+run the ``distcheck`` target::
+
     $ make -s distcheck
     [...]
     ==============================================
@@ -220,7 +260,7 @@ According to the usage message only Git is supported::
      create mode 100644 src/vtc/vut_qux.vtc
      create mode 100644 tutorial.spec.in
 
-Thanks to generated ``.gitignore`` file none of the build artifacts were
+Thanks to the generated ``.gitignore`` file none of the build artifacts were
 accidentally added to the Git index. So now we can finally work on those VMODs
 and VUTs, but where do we start?
 
@@ -251,6 +291,8 @@ needed::
     tutorial.spec.in:URL:           XXX://put.your/url/here
     tutorial.spec.in:XXX: put your long description here
     tutorial.spec.in:* Tue Oct 10 2017 XXX: author <your@email> - 0.1
+
+At least, it gets you that far.
 
 Installation
 ------------
