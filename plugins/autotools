@@ -124,5 +124,10 @@ for v in $vmod
 do
 	src_vtc_vmod_vtc $v >src/vtc/vmod_$v.vtc
 done
+
+for v in $vut
+do
+	src_vtc_vut_vtc $v >src/vtc/vut_$v.vtc
+done
 IFS=$OLD_IFS
 

@@ -141,6 +141,21 @@ EOF
 # src/Makefile.am
 #################
 
+tests() {
+	OLD_IFS=$IFS
+	IFS=,
+	for v in $vmod
+	do
+		printf 'vmod_%s.vtc,' "$v"
+	done
+
+	for v in $vut
+	do
+		printf 'vut_%s.vtc,' "$v"
+	done
+	IFS=$OLD_IFS
+}
+
 manuals() {
 	OLD_IFS=$IFS
 	IFS=,
@@ -159,8 +174,13 @@ manuals() {
 src_makefile_am() {
 # TODO: TESTS = tests/vmod_*.vtc tests/vut_*.vtc
 # TODO: figure out VSCs
+
+all_tests=$(tests)
+tests_list=${all_tests%,}
+
 all_mans=$(manuals)
 mans_list=${all_mans%,}
+
 m4 <<EOF
 include(vcdk.m4)dnl
 AM_CFLAGS = \$(VARNISHAPI_CFLAGS)
@@ -214,8 +234,8 @@ AM_VTC_LOG_FLAGS = \\
 	-p vmod_path="\$(abs_builddir)/.libs:\$(vmoddir)"
 
 TESTS = \\
-foreachc([CONT], [ \\], [VMOD], ([$vmod]), [dnl
-	vtc/vmod_[]VMOD.vtc[]CONT
+foreachc([CONT], [ \\], [VTC], ([$tests_list]), [dnl
+	vtc/VTC[]CONT
 ])dnl
 
 # Documentation
@@ -490,6 +510,26 @@ client c1 {
 	expect resp.status == 200
 	expect resp.http.Hello == "vmod-$1"
 } -run
+EOF
+}
+
+src_vtc_vut_vtc() {
+cat <<EOF
+varnishtest "test vut-$1"
+
+server s1 {
+	rxreq
+	txresp
+} -start
+
+varnish v1 -vcl+backend { } -start
+
+client c1 {
+	txreq
+	rxresp
+} -run
+
+shell {$1 -n \${v1_name} -d}
 EOF
 }
 
