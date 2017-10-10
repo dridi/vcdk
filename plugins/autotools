@@ -94,6 +94,11 @@ chmod +x bootstrap
 configure_ac >configure.ac
 makefile_am >Makefile.am
 
+case $scm in
+	git) _gitignore >.gitignore ;;
+	*) ;; # unreachable
+esac
+
 mkdir src
 
 src_makefile_am >src/Makefile.am
@@ -113,3 +118,4 @@ do
 	src_vut_rst_in $v >src/${v}.rst.in
 done
 IFS=$OLD_IFS
+

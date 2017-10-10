@@ -461,3 +461,79 @@ SEE ALSO
 
 EOF
 }
+
+_gitignore() {
+m4 <<EOF
+include(vcdk.m4)dnl
+# build system
+
+.deps/
+.libs/
+autom4te.cache/
+build-aux/
+m4/
+
+*.la
+*.lo
+*.o
+*.tar.gz
+
+Makefile
+Makefile.in
+aclocal.m4
+config.h
+config.h.in
+config.log
+config.status
+configure
+libtool
+stamp-h1
+
+# test suite
+
+*.log
+*.trs
+ifelse([$vmod], [], [], [dnl
+
+# vmodtool
+
+vcc_*_if.[[ch]]
+vmod_*.rst
+])dnl
+ifelse([$vsc], [], [], [dnl
+
+# vsctool
+
+VSC_*.[ch]
+VSC_*.rst
+])dnl
+
+# man
+
+*.1
+*_options.rst
+*_synopsis.rst
+vmod_*.3
+foreachc([], [], [VUT], ([$vut]), [dnl
+VUT.rst
+])dnl
+ifelse([$vut], [], [], [dnl
+
+# bin
+
+foreachc([], [], [VUT], ([$vut]), [dnl
+VUT
+])dnl
+])dnl
+ifelse([$pkg], [rpm], [dnl
+
+# rpm
+
+mockbuild/
+rpmbuild/
+
+*.rpm
+*.spec
+])dnl
+EOF
+}
