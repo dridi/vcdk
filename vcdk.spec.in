@@ -1,0 +1,40 @@
+%global debug_package %{nil}
+
+Name:		@PACKAGE@
+Version:	@PACKAGE_VERSION@
+Release:	1%{?dist}
+Summary:	Varnish Cache Development Kit
+
+License:	GPLv3+
+URL:		https://github.com/dridi/%{name}
+Source0:	%{name}-%{version}.tar.gz
+BuildArch:	noarch
+
+
+%description
+Generate project skeletons to interact with Varnish Cache, by creating
+VMODs or utility programs using libvarnishapi.
+
+
+%prep
+%setup -q
+
+
+%build
+%configure
+%make_build
+
+
+%install
+%make_install
+
+
+%files
+%{_bindir}/%{name}
+%{_libexecdir}/%{name}-setup.sh
+%{_libexecdir}/%{name}
+
+
+%changelog
+* Tue Oct 10 2017 Dridi <dridi.boukelmoune@gmail.com> - 0.1
+- Initial spec

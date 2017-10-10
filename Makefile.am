@@ -37,4 +37,5 @@ EXTRA_DIST = \
 	$(libexec_SCRIPTS) \
 	$(vcdk_SCRIPTS) \
 	$(vcdk_DATA) \
-	vcdk.in
+	vcdk.in \
+	vcdk.spec

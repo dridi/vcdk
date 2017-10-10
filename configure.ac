@@ -23,10 +23,15 @@ AC_INIT([vcdk],
 AC_COPYRIGHT([Copyright (C) 2017  Dridi Boukelmoune])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_SRCDIR([vcdk.in])
-AC_CONFIG_FILES([Makefile])
 AC_PROG_SED
 
 AM_INIT_AUTOMAKE([1.12 -Wall -Werror foreign parallel-tests])
 
 AC_SUBST([vcdkdir], [$libexecdir/vcdk])
+
+AC_CONFIG_FILES([
+	Makefile
+	vcdk.spec
+])
+
 AC_OUTPUT
