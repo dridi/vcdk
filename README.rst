@@ -68,7 +68,7 @@ offer then::
 older versions than the latest needs to be added one way or another, probably
 via new plugins.*
 
-It also complains again, but this time the usage information show  a bit more
+It complains again, but this time the usage information show  a bit more
 capabilities (spoiler alert, not everything is implemented) so let's create a
 project with two VMODs and two VUTs, with RPM packaging::
 
@@ -89,6 +89,7 @@ One more time::
 Still no output, it's so alpha that even a basic option like ``--verbose`` is
 not supported... No problem, let's build this project and see what it has::
 
+    $ cd tutorial
     $ tree
     .
     |-- bootstrap
@@ -232,13 +233,19 @@ needed::
     src/baz.c:      /* XXX: process transactions */
     src/baz.c:      /* XXX: parse command line */
     src/baz.c:      /* XXX: run your utility */
+    src/baz.rst.in:XXX: document VUT baz
     src/baz_options.h:/* XXX: make your own options */
-    src/baz_options.h:/* XXX: or take advantage of existing ones, a global option can only be
+    src/baz_options.h:/* XXX: or take advantage of existing ones,
     src/qux.c:      /* XXX: process transactions */
     src/qux.c:      /* XXX: parse command line */
     src/qux.c:      /* XXX: run your utility */
+    src/qux.rst.in:XXX: document VUT qux
     src/qux_options.h:/* XXX: make your own options */
-    src/qux_options.h:/* XXX: or take advantage of existing ones, a global option can only be
+    src/qux_options.h:/* XXX: or take advantage of existing ones,
+    src/vmod_bar.vcc:XXX: document vmod-bar
+    src/vmod_bar.vcc:XXX: define vmod-bar interface
+    src/vmod_foo.vcc:XXX: document vmod-foo
+    src/vmod_foo.vcc:XXX: define vmod-foo interface
     tutorial.spec.in:Summary:       XXX: put your summary here
     tutorial.spec.in:License:       XXX: put your license here
     tutorial.spec.in:URL:           XXX://put.your/url/here
