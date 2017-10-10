@@ -213,6 +213,11 @@ AM_VTC_LOG_FLAGS = \\
 	-p vcl_path="\$(abs_top_srcdir)/vcl" \\
 	-p vmod_path="\$(abs_builddir)/.libs:\$(vmoddir)"
 
+TESTS = \\
+foreachc([CONT], [ \\], [VMOD], ([$vmod]), [dnl
+	vtc/vmod_[]VMOD.vtc[]CONT
+])dnl
+
 # Documentation
 
 dist_doc_DATA = \\
@@ -459,6 +464,32 @@ SEE ALSO
 ``vcl``\(7),
 ``varnishd``\(1)
 
+EOF
+}
+
+src_vtc_vmod_vtc() {
+cat <<EOF
+varnishtest "test vmod-$1"
+
+server s1 {
+	rxreq
+	txresp
+} -start
+
+varnish v1 -vcl+backend {
+        import $1;
+
+        sub vcl_deliver {
+	    set resp.http.Hello = $1.hello();
+        }
+} -start
+
+client c1 {
+	txreq
+	rxresp
+	expect resp.status == 200
+	expect resp.http.Hello == "vmod-$1"
+} -run
 EOF
 }
 

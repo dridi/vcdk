@@ -117,5 +117,12 @@ do
 	src_vut_options_h $v >src/${v}_options.h
 	src_vut_rst_in $v >src/${v}.rst.in
 done
+
+mkdir src/vtc
+
+for v in $vmod
+do
+	src_vtc_vmod_vtc $v >src/vtc/vmod_$v.vtc
+done
 IFS=$OLD_IFS
 
