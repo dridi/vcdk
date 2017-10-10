@@ -99,6 +99,12 @@ case $scm in
 	*) ;; # unreachable
 esac
 
+case $pkg in # XXX: iterate over packagings
+	'') ;; # none selected
+	rpm) rpm_spec_in >$name.spec.in ;;
+	*) ;; # unreachable
+esac
+
 mkdir src
 
 src_makefile_am >src/Makefile.am

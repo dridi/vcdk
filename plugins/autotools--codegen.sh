@@ -102,6 +102,10 @@ changequote({[}, {]})dnl
 foreachc([], [], [VUT], ([$vut]), [dnl
 	src/VUT.rst
 ])dnl
+ifelse([$pkg], [rpm], [dnl
+dnl XXX iterate over packagings
+	$name.spec
+])dnl
 changequote([{], [}])dnl
 ])
 
@@ -128,12 +132,18 @@ EOF
 #############
 
 makefile_am() {
-cat << 'EOF'
-ACLOCAL_AMFLAGS = -I m4 -I $(VARNISHAPI_DATAROOTDIR)/aclocal
+m4 <<EOF
+include(vcdk.m4)dnl
+ACLOCAL_AMFLAGS = -I m4 -I \$(VARNISHAPI_DATAROOTDIR)/aclocal
 
 DISTCHECK_CONFIGURE_FLAGS = RST2MAN=:
 
 SUBDIRS = src
+ifelse([$pkg], [rpm], [dnl
+dnl XXX iterate over packagings
+
+EXTRA_DIST = $name.spec
+])dnl
 EOF
 }
 
@@ -606,5 +616,59 @@ rpmbuild/
 *.rpm
 *.spec
 ])dnl
+EOF
+}
+
+rpm_spec_in() {
+m4 <<EOF
+include(vcdk.m4)dnl
+%global __debug_package	0
+%global __strip	true
+
+%global vmoddir	%{_libdir}/varnish/vmods
+%global vcldir	%{_datadir}/varnish/vcl
+
+Name:		@PACKAGE@
+Version:	@PACKAGE_VERSION@
+Release:	1%{?dist}
+Summary:	XXX: put your summary here
+
+License:	XXX: put your license here
+URL:		XXX://put.your/url/here
+Source:		%{name}-%{version}.tar.gz
+
+BuildRequires:	pkgconfig(varnishapi) >= 5.2.0
+
+%description
+XXX: put your long description here
+
+%prep
+%setup -q
+
+%build
+%configure CFLAGS="%{optflags}" RST2MAN=:
+%make_build V=1
+
+%install
+%make_install
+ifelse([$vmod], [], [], [dnl
+rm -f %{buildroot}%{vmoddir}/*.la
+])dnl
+
+%check
+%make_build check
+
+%files
+foreachc([], [], [VUT], ([$vut]), [dnl
+%{_bindir}/VUT
+])dnl
+%{_mandir}/man*/*
+foreachc([], [], [VMOD], ([$vmod]), [dnl
+%{vmoddir}/libvmod_[]VMOD.so
+])dnl
+
+%changelog
+* $(LANG=en_US.utf8 date -u '+%a %b %e %Y') XXX: author <your@email> - 0.1
+- Initial spec
 EOF
 }
