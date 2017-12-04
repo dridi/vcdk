@@ -27,6 +27,8 @@ AC_PROG_SED
 
 AM_INIT_AUTOMAKE([1.12 -Wall -Werror foreign parallel-tests])
 
+AC_SUBST([vcdkdir], [$libexecdir/vcdk])
+
 AC_CONFIG_FILES([
 	Makefile
 	vcdk.spec
