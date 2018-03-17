@@ -1,4 +1,4 @@
-# Copyright (C) 2017  Dridi Boukelmoune
+# Copyright (C) 2017-2018  Dridi Boukelmoune
 # All rights reserved.
 #
 # This program is free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@ test -n "$ROOT_DIR"
 cd "$ROOT_DIR"
 
 ifelse(needs_libtool, [1], [dnl
-if ! which libtoolize >/dev/null 2>&1
+if ! command -v libtoolize >/dev/null
 then
 	echo "libtoolize: command not found, falling back to glibtoolize" >&2
 	alias libtoolize=glibtoolize
