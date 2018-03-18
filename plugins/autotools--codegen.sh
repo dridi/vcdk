@@ -24,11 +24,11 @@ include(vcdk.m4)dnl
 #!/bin/sh
 
 set -e
+set -u
 
-WORK_DIR="$PWD"
-ROOT_DIR="$(dirname "$0")"
+WORK_DIR=$(pwd)
+ROOT_DIR=$(dirname "$0")
 
-test -n "$ROOT_DIR"
 cd "$ROOT_DIR"
 
 ifelse(needs_libtool, [1], [dnl
