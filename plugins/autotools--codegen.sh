@@ -275,13 +275,10 @@ cat <<EOF
 #include "config.h"
 
 #include <cache/cache.h>
-#include <vdef.h>
-#include <vrt.h>
-#include <vcl.h>
 
 #include "vcc_$1_if.h"
 
-VCL_STRING __match_proto__(td_$1_hello)
+VCL_STRING
 vmod_hello(VRT_CTX)
 {
 
