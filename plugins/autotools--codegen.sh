@@ -84,7 +84,7 @@ AC_ARG_WITH([rst2man],
 	[RST2MAN="\$withval"],
 	AC_CHECK_PROGS(RST2MAN, [rst2man rst2man.py], []))
 
-VARNISH_PREREQ([5.2.0])
+VARNISH_PREREQ([6.0.0])
 ifelse({$vmod}, {}, {}, {dnl
 VARNISH_VMODS([translit({$vmod}, {,}, { })])
 })dnl
@@ -275,13 +275,10 @@ cat <<EOF
 #include "config.h"
 
 #include <cache/cache.h>
-#include <vdef.h>
-#include <vrt.h>
-#include <vcl.h>
 
 #include "vcc_$1_if.h"
 
-VCL_STRING __match_proto__(td_$1_hello)
+VCL_STRING
 vmod_hello(VRT_CTX)
 {
 
@@ -293,7 +290,7 @@ EOF
 
 src_vmod_vcc() {
 cat <<EOF
-\$Module $1 3 Varnish $1 Module
+\$Module $1 3 "Varnish $1 Module"
 
 DESCRIPTION
 ===========
@@ -335,6 +332,7 @@ cat <<EOF
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h>	// 6.2
 
 #define VOPT_DEFINITION
 #define VOPT_INC "$1_options.h"
@@ -342,8 +340,8 @@ cat <<EOF
 #include <vapi/voptget.h>
 #include <vapi/vsl.h>
 
-#include <vas.h>
 #include <vdef.h>
+#include <vas.h>
 #include <vut.h>
 
 static struct VUT *vut;
@@ -361,7 +359,7 @@ usage(int status)
 	exit(status);
 }
 
-static int __match_proto__(VSLQ_dispatch_f)
+static int
 dispatch(struct VSL_data *vsl, struct VSL_transaction * const *pt, void *priv)
 {
 
@@ -644,7 +642,7 @@ License:	XXX: put your license here
 URL:		XXX://put.your/url/here
 Source:		%{name}-%{version}.tar.gz
 
-BuildRequires:	pkgconfig(varnishapi) >= 5.2.0
+BuildRequires:	pkgconfig(varnishapi) >= 6.0.0
 
 %description
 XXX: put your long description here

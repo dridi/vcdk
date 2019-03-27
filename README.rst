@@ -64,9 +64,9 @@ offer then::
         --vsc=<list>         names of counters to build
         --vut=<list>         names of utilities to build
 
-*This is not obvious yet, but only Varnish 5.2.0 is supported, support for
-older versions than the latest needs to be added one way or another, probably
-via new plugins.*
+*This is not obvious yet, but only Varnish >= 6.0.0 is supported,
+support for older versions than the latest needs to be added one way
+or another, probably via new plugins.*
 
 It complains again, but this time the usage information show  a bit more
 capabilities (spoiler alert, not everything is implemented) so let's create a
@@ -118,7 +118,7 @@ not supported... No problem, let's build this project and see what it has::
     [...]
             ==== tutorial 0.1 ====
 
-            varnish:      5.2.0
+            varnish:      6.0.0
             prefix:       /usr
             vmoddir:      /usr/lib/varnish/vmods
             vcldir:       /usr/share/varnish/vcl
