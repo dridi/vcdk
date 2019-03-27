@@ -240,8 +240,8 @@ AM_TESTS_ENVIRONMENT = \\
 TEST_EXTENSIONS = .vtc
 VTC_LOG_COMPILER = varnishtest -v
 AM_VTC_LOG_FLAGS = \\
-	-p vcl_path="\$(abs_top_srcdir)/vcl" \\
-	-p vmod_path="\$(abs_builddir)/.libs:\$(vmoddir)"
+	-p vcl_path="\$(abs_top_srcdir)/vcl:\$(VARNISHAPI_VCLDIR)" \\
+	-p vmod_path="\$(abs_builddir)/.libs:\$(vmoddir):\$(VARNISHAPI_VMODDIR)"
 
 TESTS = \\
 foreachc([CONT], [ \\], [VTC], ([$tests_list]), [dnl
