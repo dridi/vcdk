@@ -66,17 +66,10 @@ AC_PREREQ([2.68])
 AC_INIT([$name], [0.1])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
-AC_CONFIG_HEADER([config.h])
+AC_CONFIG_HEADERS([config.h])
 
 AM_INIT_AUTOMAKE([1.12 -Wall -Werror foreign parallel-tests])
 AM_SILENT_RULES([yes])
-AM_PROG_AR
-
-ifelse(needs_libtool, {1}, {dnl
-LT_PREREQ([2.2.6])
-LT_INIT([dlopen disable-static])
-
-})dnl
 AC_ARG_WITH([rst2man],
 	AS_HELP_STRING(
 		[--with-rst2man=PATH],
@@ -95,6 +88,13 @@ ifelse({$vut}, {}, {}, {dnl
 VARNISH_UTILITIES([translit({$vut}, {,}, { })])
 })dnl
 
+AM_PROG_AR
+
+ifelse(needs_libtool, {1}, {dnl
+LT_PREREQ([2.2.6])
+LT_INIT([dlopen disable-static])
+
+})dnl
 AC_CONFIG_FILES([
 	Makefile
 	src/Makefile
