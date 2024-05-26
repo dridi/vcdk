@@ -26,29 +26,16 @@ include(vcdk.m4)dnl
 set -e
 set -u
 
-WORK_DIR=$(pwd)
 ROOT_DIR=$(dirname "$0")
 
-cd "$ROOT_DIR"
+pkg-config --exists --print-errors varnishapi
 
-ifelse(needs_libtool, [1], [dnl
-if ! command -v libtoolize >/dev/null
-then
-	echo "libtoolize: command not found, falling back to glibtoolize" >&2
-	alias libtoolize=glibtoolize
-fi
+VARNISHAPI_DATAROOTDIR=$(pkg-config --variable=datarootdir varnishapi)
+export VARNISHAPI_DATAROOTDIR
 
-])dnl
 mkdir -p m4
-aclocal
-ifelse(needs_libtool, [1], [dnl
-libtoolize --copy --force
-])dnl
-autoheader
-automake --add-missing --copy --foreign
-autoconf
+autoreconf -i "$ROOT_DIR"
 
-cd "$WORK_DIR"
 "$ROOT_DIR"/configure "$@"
 EOF
 }
@@ -134,7 +121,7 @@ EOF
 makefile_am() {
 m4 <<EOF
 include(vcdk.m4)dnl
-ACLOCAL_AMFLAGS = -I m4 -I @VARNISHAPI_DATAROOTDIR@/aclocal
+ACLOCAL_AMFLAGS = -I m4 -I \${VARNISHAPI_DATAROOTDIR}/aclocal
 
 DISTCHECK_CONFIGURE_FLAGS = RST2MAN=:
 
